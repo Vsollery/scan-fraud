@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('customer_scan', function (Blueprint $table) {
             $table->id();
             $table->foreignId('scan_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('customer_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('customer_id')->constrained('customers', 'customer_id')->cascadeOnDelete();
             $table->boolean('is_fraudulent')->default(false);
         });
     }

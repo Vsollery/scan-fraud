@@ -8,8 +8,9 @@ class Scan extends Model
 {
     //
     protected $guarded = [];
+    public $timestamps = false;
 
-    public function customer(){
-        return $this->belongsToMany(Customer::class, 'customer_scan')->withPivot('is_fraudulent');
+    public function customers(){
+        return $this->belongsToMany(Customer::class, 'customer_scan', 'scan_id', 'customer_id')->withPivot('is_fraudulent');
     }
 }

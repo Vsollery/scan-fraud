@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('scans', function (Blueprint $table) {
             $table->id();
-            $table->timestamps('scan_date');
+            $table->timestamp('scan_date')->nullable(); ;
         });
     }
 

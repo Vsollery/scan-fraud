@@ -19,6 +19,6 @@ class Customer extends Model
 
      public function scans()
      {
-        return $this->belongsToMany(Scan::class, 'customer_scan')->withPivot('is_fraudulent');
+        return $this->belongsToMany(Scan::class, 'customer_scan', 'customer_id', 'scan_id')->withPivot('is_fraudulent');
      }
 }
