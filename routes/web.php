@@ -1,7 +1,18 @@
 <?php
 
+use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\ScanController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/scan', function () {
+    return view('scan');
+});
+
+//Route::get('/scan2', [CustomerController::class, 'index']);
+Route::get('/scan-history', [ScanController::class, 'index'])->name('scan.history');
+Route::get('/scan', [ScanController::class, 'showScan'])->name('scan.page');;
+Route::post('/scan/start', [ScanController::class, 'startScan'])->name('scan.start');
