@@ -2,29 +2,23 @@
 
 @section('container')
     <h1 class="text-3xl font-bold text-blue-500 leading-tight">Scan History</h1>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        @foreach($scans as $scan)
+            <a href="{{ route('scan', ['scan' => $scan['scan_date']]) }}">
 
-    @foreach($scans as $scan)
-        <div class="scan mt-4 p-4 border rounded shadow-md">
-            <p><strong>Scan Date:</strong> {{ $scan->scan_date }}</p>
-            <h3 class="mt-2 font-medium">Associated Customers:</h3>
-            <ul>
-                @foreach($scan->customers as $customer)
-                    <li>
-                        <p><strong>Name:</strong> {{ $customer->firstName }} {{ $customer->lastName }}</p>
-                        <p><strong>Phone:</strong> {{ $customer->phoneNumber }}</p>
-                        <p><strong>Date of Birth:</strong> {{ $customer->dob }}</p>
-                        <p><strong>IP Address:</strong> {{ $customer->ipAddress }}</p>
-                        <p><strong>IBAN:</strong> {{ $customer->iban }}</p>
-                        <p><strong>Status:</strong>
-                            <span class="{{ $customer->pivot->is_fraudulent ? 'text-red-600' : 'text-green-600' }}">
-                                {{ $customer->pivot->is_fraudulent ? 'Fraudulent' : 'Safe' }}
-                            </span>
-                        </p>
-                    </li>
-                @endforeach
-            </ul>
-        </div>
-    @endforeach
+                <div class="bg-white rounded-xl shadow p-5 border border-gray-100">
+                    <h2 class="text-xl font-semibold mb-2 text-gray-800">Scan Date</h2>
+                    <p class="text-gray-600 mb-4">{{ $scan['scan_date'] }}</p>
+                    <div class="text-sm space-y-1">
+                        <p class="text-green-600"><strong>Safe:</strong> {{ $scan['total_safe'] }}</p>
+                        <p class="text-red-600"><strong>Fraudulent:</strong> {{ $scan['total_fraud'] }}</p>
+                    </div>
+                </div>
+            </a>
+        @endforeach
+
+    </div>
+
 @endsection
 
 

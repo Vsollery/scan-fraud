@@ -4,7 +4,7 @@
             <a class="text-2xl font-bold text-gray-800" href="#">Fraud Scanner</a>
         </div>
         <div class="hidden md:flex space-x-4">
-            <a class="hover:text-blue-600" href="/scan">Scan Fraud</a>
+            <a class="hover:text-blue-600" href="/home">Scan Fraud</a>
             <a class="hover:text-blue-600" href="/scan-history">Scan History</a>
         </div>
         <div class="md:hidden">

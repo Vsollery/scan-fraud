@@ -20,16 +20,41 @@ class ScanController extends Controller
 
     public function index()
     {
-        $scans = Scan::all();
-        return view('scans', [
-            'scans' => $scans
-        ]);
+        $scans = Scan::with('customers')->get();
 
+        $scanSummaries = [];
+        foreach ($scans as $scan) {
+            $totalCustomers = $scan->customers->count();
+            $totalFraud = $scan->customers->where('pivot.is_fraudulent', 1)->count();
+            $totalSafe = $totalCustomers - $totalFraud;
+
+            $scanSummaries[] = [
+                'scan_date' => $scan->scan_date,
+                'total_customers' => $totalCustomers,
+                'total_safe' => $totalSafe,
+                'total_fraud' => $totalFraud,
+            ];
+        }
+
+        $scanSummaries = collect($scanSummaries)->sortByDesc('scan_date')->values();
+
+        return view('scans', [
+            'scans' => $scanSummaries
+        ]);
     }
 
     public function showScan()
     {
-        return view('scan');
+        return view('home');
+    }
+
+    public function scan(Scan $scan)
+    {
+        $scan->load('customers');
+
+        return view('scan', [
+            'scan' => $scan
+        ]);
     }
 
     public function startScan(Request $request){
@@ -63,8 +88,8 @@ class ScanController extends Controller
                 ]);
             }
         }
-        return view('scan', [
+        return view('home', [
             'customers' =>  $scannedCustomers
-        ]);
+        ])->with('success', 'Scan created successfully');
     }
 }
