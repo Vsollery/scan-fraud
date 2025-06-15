@@ -1,11 +1,10 @@
 @extends('layouts.main')
 
 @section('container')
-    <h1 class="text-3xl font-bold text-blue-500 leading-tight">Scan History</h1>
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+    <h1 class="text-3xl font-bold text-orange-400">Scan History</h1>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 m-4">
         @foreach($scans as $scan)
             <a href="{{ route('scan', ['scan' => $scan['scan_date']]) }}">
-
                 <div class="bg-white rounded-xl shadow p-5 border border-gray-100">
                     <h2 class="text-xl font-semibold mb-2 text-gray-800">Scan Date</h2>
                     <p class="text-gray-600 mb-4">{{ $scan->scan_date}}</p>
