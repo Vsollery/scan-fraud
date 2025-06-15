@@ -10,8 +10,7 @@
                     <h2 class="text-xl font-semibold mb-2 text-gray-800">Scan Date</h2>
                     <p class="text-gray-600 mb-4">{{ $scan->scan_date}}</p>
                     <div class="text-sm space-y-1">
-                        <p class="text-green-600"><strong>Safe:</strong> {{ $scan['total_safe'] }}</p>
-                        <p class="text-red-600"><strong>Fraudulent:</strong> {{ $totalFraudulent}}</p>
+                        <p class="text-red-600"><strong>Fraudulent:</strong> {{$scan->fraudulent_customers_count}}</p>
                     </div>
                 </div>
             </a>

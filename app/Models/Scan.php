@@ -19,4 +19,10 @@ class Scan extends Model
         return 'scan_date';
     }
 
+    public function fraudulentCustomers()
+    {
+        return $this->customers()->wherePivot('is_fraudulent', 1);
+    }
+
+
 }

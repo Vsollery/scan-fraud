@@ -21,12 +21,14 @@ class ScanController extends Controller
 
     public function index()
     {
-        $scans = Scan::with('customers');
-
+        $scans = Scan::with('customers')
+            ->withCount('fraudulentCustomers')
+            ->latest('scan_date')
+            ->paginate(9);
+        ;
 
         return view('scans', [
-            'scans' => $scans->latest('scan_date')->paginate(9),
-            'totalFraudulent' => $totalFraudulent,
+            'scans' => $scans,
         ]);
     }
 

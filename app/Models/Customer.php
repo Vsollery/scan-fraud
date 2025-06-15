@@ -21,4 +21,6 @@ class Customer extends Model
      {
         return $this->belongsToMany(Scan::class, 'customer_scan', 'customer_id', 'scan_id')->withPivot('is_fraudulent');
      }
+
+
 }
