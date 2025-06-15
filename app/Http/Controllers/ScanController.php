@@ -7,8 +7,8 @@ use App\Models\Scan;
 use App\Services\CustomerService;
 use App\Services\ScanService;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class ScanController extends Controller
 {
@@ -23,8 +23,10 @@ class ScanController extends Controller
     {
         $scans = Scan::with('customers');
 
+
         return view('scans', [
             'scans' => $scans->latest('scan_date')->paginate(9),
+            'totalFraudulent' => $totalFraudulent,
         ]);
     }
 
@@ -64,7 +66,7 @@ class ScanController extends Controller
         ]);
     }
 
-    public function startScan(Request $request){
+    public function startScan(){
 
         try{
             $customers = $this->customerService->getCustomersData();
@@ -95,18 +97,17 @@ class ScanController extends Controller
                     'is_fraudulent' =>  $is_fraudulent,
                 ]);
 
-
             }
 
             // Cache the scan data with customer details
             Cache::put('last_scan', [
                 'scan_date' => $scan->scan_date->toDateTimeString(),
                 'customers' => $scannedCustomers,
-            ], now()->addMinutes(30)); // Cache expires in 30 minutes
+            ], now()->addMinutes(30));
         }
-        return view('home', [
-            'customers' =>  $scannedCustomers
-        ])->with('success', 'Scan created successfully');
+        return redirect('/home')
+            ->with('success', 'Scan created successfully')
+            ->with('customers', $scannedCustomers);
     }
 }
 
