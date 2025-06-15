@@ -8,6 +8,7 @@ use App\Services\CustomerService;
 use App\Services\ScanService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class ScanController extends Controller
 {
@@ -20,44 +21,51 @@ class ScanController extends Controller
 
     public function index()
     {
-        $scans = Scan::with('customers')->get();
-
-        $scanSummaries = [];
-        foreach ($scans as $scan) {
-            $totalCustomers = $scan->customers->count();
-            $totalFraud = $scan->customers->where('pivot.is_fraudulent', 1)->count();
-            $totalSafe = $totalCustomers - $totalFraud;
-
-            $scanSummaries[] = [
-                'scan_date' => $scan->scan_date,
-                'total_customers' => $totalCustomers,
-                'total_safe' => $totalSafe,
-                'total_fraud' => $totalFraud,
-            ];
-        }
-
-        $scanSummaries = collect($scanSummaries)->sortByDesc('scan_date')->values();
+        $scans = Scan::with('customers');
 
         return view('scans', [
-            'scans' => $scanSummaries
+            'scans' => $scans->latest('scan_date')->paginate(9),
         ]);
     }
 
-    public function showScan()
+    public function home()
     {
+        $cacheKey = 'last_scan';
+        if(Cache::has($cacheKey)) {
+            // Cache exists, retrieve it
+            $cachedData = Cache::get($cacheKey);
+
+            return view('home',[
+                'customers' => $cachedData['customers'],
+            ]);
+        }
+
         return view('home');
     }
 
     public function scan(Scan $scan)
     {
-        $scan->load('customers');
+
+        $query = $scan->customers();
+
+        if ($filter = request('filter')) {
+            if ($filter == 'safe') {
+                $query->wherePivot('is_fraudulent', 0);
+            } elseif ($filter == 'fraudulent') {
+                $query->wherePivot('is_fraudulent', 1);
+            }
+        }
+
+        $customers = $query->get();
 
         return view('scan', [
-            'scan' => $scan
+            'scan' => $scan,
+            'customers' => $customers
         ]);
     }
 
     public function startScan(Request $request){
+
         try{
             $customers = $this->customerService->getCustomersData();
             $scannedCustomers = $this->scanService->scanFraud($customers);
@@ -86,10 +94,20 @@ class ScanController extends Controller
                 $scan->customers()->attach($customerModel->customer_id, [
                     'is_fraudulent' =>  $is_fraudulent,
                 ]);
+
+
             }
+
+            // Cache the scan data with customer details
+            Cache::put('last_scan', [
+                'scan_date' => $scan->scan_date->toDateTimeString(),
+                'customers' => $scannedCustomers,
+            ], now()->addMinutes(30)); // Cache expires in 30 minutes
         }
         return view('home', [
             'customers' =>  $scannedCustomers
         ])->with('success', 'Scan created successfully');
     }
 }
+
+

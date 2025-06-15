@@ -10,3 +10,13 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+/* resources/css/components.css */
+.table-head {
+    @apply border border-gray-300 bg-gray-100 font-semibold text-left px-4 py-2;
+}
+
+.table-cell {
+    @apply border border-gray-300 px-4 py-2;
+}
+

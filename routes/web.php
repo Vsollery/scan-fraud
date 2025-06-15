@@ -14,6 +14,6 @@ Route::get('/scan', function () {
 
 //Route::get('/scan2', [CustomerController::class, 'index']);
 Route::get('/scan-history', [ScanController::class, 'index'])->name('scan.history');
-Route::get('/home', [ScanController::class, 'showScan'])->name('scan.page');;
+Route::get('/home', [ScanController::class, 'home'])->name('scan.page');;
 Route::get('/scan/{scan}', [ScanController::class, 'scan'])->name('scan');
 Route::post('/scan/start', [ScanController::class, 'startScan'])->name('scan.start');

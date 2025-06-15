@@ -22,12 +22,7 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        $response = $this->customerService->getCustomersData();
-        $scannedCustomers = $this->scanService->scanFraud($response);
-        return view('scan',
-        [
-            'customers' => $scannedCustomers,
-        ]);
+
 
     }
 }
