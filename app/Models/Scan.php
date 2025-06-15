@@ -16,9 +16,6 @@ class Scan extends Model
 
     public function getRouteKeyName()
     {
-//        if (request()->is('api/*')) {
-//            return 'id'; // Use 'id' for API routes
-//        }
         return 'scan_date';
     }
 
